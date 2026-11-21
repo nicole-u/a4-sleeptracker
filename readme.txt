@@ -1,4 +1,4 @@
---Readme document for *author(s)*, *email(s)*, *UCI id(s)*--
+--Readme document for Nicole Utama, nutama@uci.edu, 20267081--
 
 1. How many assignment points do you believe you completed (replace the *'s with your numbers)?
 
@@ -16,7 +16,7 @@
 
 
 3. What online resources did you consult when completing this assignment? (list specific URLs)
-
+https://ionicacademy.com/storing-data-inside-ionic-apps/
 
 
 4. What classmates or other individuals did you consult as part of this assignment? What did you discuss?

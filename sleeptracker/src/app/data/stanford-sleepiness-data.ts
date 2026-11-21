@@ -21,6 +21,14 @@ export class StanfordSleepinessData extends SleepData {
 		this.loggedAt = loggedAt;
 	}
 
+	get sleepyValue() {
+		return this.loggedValue;
+	}
+
+	get time() {
+		return this.loggedAt;
+	}
+
 	override summaryString():string {
 		return this.loggedValue + ": " + StanfordSleepinessData.ScaleValues[this.loggedValue];
 	}

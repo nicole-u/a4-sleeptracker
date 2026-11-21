@@ -2,21 +2,26 @@ import { Injectable } from '@angular/core';
 import { SleepData } from '../data/sleep-data';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
+import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SleepService {
-	private static LoadDefaultData:boolean = true;
+	private static LoadDefaultData:boolean = false;
 	public static AllSleepData:SleepData[] = [];
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
+	private storage: Storage; //dawg why are we throwing errors again it can't be that bad
 
 	constructor() {
-		if(SleepService.LoadDefaultData) {
-			this.addDefaultData();
-		SleepService.LoadDefaultData = false;
+		this.init();
 	}
+
+	async init() {
+		//construct the storage and set it
+		this.storage = await this.storage.create();
+		await this.load();
 	}
 
 	private addDefaultData() {
@@ -38,13 +43,33 @@ export class SleepService {
 		this.logOvernightData(new OvernightSleepData(goToBed, wakeUp));
 	}
 
+	private async load() {
+		var sleepData = await this.storage.get("sleep");
+		var sleepinessData = await this.storage.get("sleepiness");
+
+		if (sleepData) {
+			//create all the new sleep data with sleep data class
+		}
+
+		if (sleepinessData) {
+			//create all the new sleepiness data with sleepiness data class
+		}
+	}
+
+	private async save() {
+		await this.storage.set("sleep", SleepService.AllOvernightData);
+		await this.storage.set("sleepiness", SleepService.AllSleepinessData);
+	}
+
 	public logOvernightData(sleepData:OvernightSleepData) {
 		SleepService.AllSleepData.push(sleepData);
 		SleepService.AllOvernightData.push(sleepData);
+		this.save();
 	}
 
 	public logSleepinessData(sleepData:StanfordSleepinessData) {
 		SleepService.AllSleepData.push(sleepData);
 		SleepService.AllSleepinessData.push(sleepData);
+		this.save();
 	}
 }
