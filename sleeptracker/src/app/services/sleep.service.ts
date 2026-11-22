@@ -12,15 +12,15 @@ export class SleepService {
 	public static AllSleepData:SleepData[] = [];
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
-	private storage: Storage; //dawg why are we throwing errors again it can't be that bad
+	private sleepStorage: Storage; //dawg why are we throwing errors again it can't be that bad
 
-	constructor() {
+	constructor(private storage: Storage) {
 		this.init();
 	}
 
 	async init() {
 		//construct the storage and set it
-		this.storage = await this.storage.create();
+		this.sleepStorage = await this.storage.create();
 		await this.load();
 	}
 
@@ -44,21 +44,33 @@ export class SleepService {
 	}
 
 	private async load() {
-		var sleepData = await this.storage.get("sleep");
-		var sleepinessData = await this.storage.get("sleepiness");
+		var sleepData = await this.sleepStorage.get("sleep");
+		var sleepinessData = await this.sleepStorage.get("sleepiness");
 
 		if (sleepData) {
-			//create all the new sleep data with sleep data class
+			//construct sleep array
+			sleepData.forEach((x: OvernightSleepData) => {
+				var newData = new OvernightSleepData(new Date(x.startOfSleep), new Date(x.endOfSleep));
+				SleepService.AllOvernightData.push(newData);
+			});
 		}
 
 		if (sleepinessData) {
-			//create all the new sleepiness data with sleepiness data class
+			//construct sleepiness array
+			sleepinessData.forEach((x: StanfordSleepinessData) => {
+				var newData = new StanfordSleepinessData(x.sleepyValue, new Date(x.time));
+				SleepService.AllSleepinessData.push(newData);
+			});
 		}
+
+		//attach all the arrays
+		SleepService.AllSleepData.concat(SleepService.AllOvernightData);
+		SleepService.AllSleepData.concat(SleepService.AllSleepinessData);
 	}
 
 	private async save() {
-		await this.storage.set("sleep", SleepService.AllOvernightData);
-		await this.storage.set("sleepiness", SleepService.AllSleepinessData);
+		await this.sleepStorage.set("sleep", SleepService.AllOvernightData);
+		await this.sleepStorage.set("sleepiness", SleepService.AllSleepinessData);
 	}
 
 	public logOvernightData(sleepData:OvernightSleepData) {
@@ -71,5 +83,9 @@ export class SleepService {
 		SleepService.AllSleepData.push(sleepData);
 		SleepService.AllSleepinessData.push(sleepData);
 		this.save();
+	}
+
+	public async clearAll() {
+		await this.sleepStorage.clear();
 	}
 }
