@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonDatetime, IonLabel } from '@ionic/angular/standalone';
 import { SleepService } from '../services/sleep.service';
 import { SleepData } from '../data/sleep-data';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
@@ -9,17 +9,50 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonDatetime, IonLabel],
 })
 export class HomePage {
-  constructor(public sleepService:SleepService) {
+	sleepStart:string = "";
+	sleepEnd:string = "";
+	sleepiness:number = 1;
+	sleepinessTime:string = "";
+	greeting:string = "Hello!";
+	possibleGreetings = ["Good morning!", "Good afternoon", "Good night"];
 
+  	constructor(public sleepService:SleepService) {
+		const currentTime = new Date();
+		currentTime.setSeconds(0, 0);
 	}
 
 	ngOnInit() {
 		console.log(this.allSleepData);
 	}
 
+	public calculate() {
+		//calculate duration
+	}
+
+	public newSleepLog() {
+		var sleepStartDate:Date = new Date(this.sleepStart);
+		sleepStartDate.setSeconds(0, 0);
+		var sleepEndDate:Date = new Date(this.sleepEnd);
+		sleepEndDate.setSeconds(0, 0);
+
+		if (sleepEndDate <= sleepStartDate) {
+			alert("You can't wake up before you sleep! Please fix the times.")
+			return;
+		}
+
+		var newSleep:OvernightSleepData = new OvernightSleepData(sleepStartDate, sleepEndDate);
+		this.sleepService.logOvernightData(newSleep);
+	}
+
+	public newSleepinessLog() {
+		//create new sleepiness log
+		var sleepinessStart:Date = new Date(this.sleepinessTime);
+		var newSleepiness:StanfordSleepinessData = new StanfordSleepinessData(this.sleepiness, sleepinessStart);
+		this.sleepService.logSleepinessData(newSleepiness);
+	}
 	/* Ionic doesn't allow bindings to static variables, so this getter can be used instead. */
 	get allSleepData() {
 		return SleepService.AllSleepData;

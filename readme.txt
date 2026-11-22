@@ -17,10 +17,13 @@
 
 3. What online resources did you consult when completing this assignment? (list specific URLs)
 https://ionicacademy.com/storing-data-inside-ionic-apps/
+https://www.w3schools.com/jsref/jsref_concat_array.asp
+http://ionicframework.com/docs/theming/
+https://spin.atomicobject.com/question-mark-react-js/
 
 
 4. What classmates or other individuals did you consult as part of this assignment? What did you discuss?
-
+none
 
 
 5. Is there anything special we need to know in order to run your code?
@@ -51,11 +54,11 @@ https://ionicacademy.com/storing-data-inside-ionic-apps/
 
 
 11. Which feature choose--using a native device resource, backing up logged data, or both?
-
+I chose to back up logged data
 
 
 12. If you used a native device resource, what feature did you add? How does this feature change the app's experience for a user?
-
+N/A
 
 
 13. If you backed up logged data, where does it back up to?

@@ -8,11 +8,11 @@ import { Storage } from '@ionic/storage-angular';
   providedIn: 'root'
 })
 export class SleepService {
-	private static LoadDefaultData:boolean = false;
+	//private static LoadDefaultData:boolean = false;
 	public static AllSleepData:SleepData[] = [];
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
-	private sleepStorage: Storage; //dawg why are we throwing errors again it can't be that bad
+	private sleepStorage:Storage | null = null; //well ig this stops it from throwing errors again
 
 	constructor(private storage: Storage) {
 		this.init();
@@ -44,8 +44,8 @@ export class SleepService {
 	}
 
 	private async load() {
-		var sleepData = await this.sleepStorage.get("sleep");
-		var sleepinessData = await this.sleepStorage.get("sleepiness");
+		var sleepData = await this.sleepStorage?.get("sleep");
+		var sleepinessData = await this.sleepStorage?.get("sleepiness");
 
 		if (sleepData) {
 			//construct sleep array
@@ -69,8 +69,8 @@ export class SleepService {
 	}
 
 	private async save() {
-		await this.sleepStorage.set("sleep", SleepService.AllOvernightData);
-		await this.sleepStorage.set("sleepiness", SleepService.AllSleepinessData);
+		await this.sleepStorage?.set("sleep", SleepService.AllOvernightData);
+		await this.sleepStorage?.set("sleepiness", SleepService.AllSleepinessData);
 	}
 
 	public logOvernightData(sleepData:OvernightSleepData) {
@@ -86,6 +86,6 @@ export class SleepService {
 	}
 
 	public async clearAll() {
-		await this.sleepStorage.clear();
+		await this.sleepStorage?.clear();
 	}
 }
