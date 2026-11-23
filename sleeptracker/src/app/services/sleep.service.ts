@@ -7,12 +7,12 @@ import { Storage } from '@ionic/storage-angular';
 @Injectable({
   providedIn: 'root'
 })
+
 export class SleepService {
-	//private static LoadDefaultData:boolean = false;
 	public static AllSleepData:SleepData[] = [];
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
-	private sleepStorage:Storage | null = null; //well ig this stops it from throwing errors again
+	private _storage:Storage | null = null;
 
 	constructor(private storage: Storage) {
 		this.init();
@@ -20,32 +20,14 @@ export class SleepService {
 
 	async init() {
 		//construct the storage and set it
-		this.sleepStorage = await this.storage.create();
+		const newStorage = await this.storage.create();
+		this._storage = newStorage;
 		await this.load();
 	}
 
-	private addDefaultData() {
-		var goToBed = new Date();
-		goToBed.setDate(goToBed.getDate() - 1); //set to yesterday
-		goToBed.setHours(1, 3, 0); //1:03am
-		var wakeUp = new Date();
-		wakeUp.setTime(goToBed.getTime() + 8 * 60 * 60 * 1000); //Sleep for exactly eight hours, waking up at 9:03am
-		this.logOvernightData(new OvernightSleepData(goToBed, wakeUp)); // add that person was asleep 1am-9am yesterday
-		var sleepinessDate = new Date();
-		sleepinessDate.setDate(sleepinessDate.getDate() - 1); //set to yesterday
-		sleepinessDate.setHours(14, 38, 0); //2:38pm
-		this.logSleepinessData(new StanfordSleepinessData(4, sleepinessDate)); // add sleepiness at 2pm
-		goToBed = new Date();
-		goToBed.setDate(goToBed.getDate() - 1); //set to yesterday
-		goToBed.setHours(23, 11, 0); //11:11pm
-		wakeUp = new Date();
-		wakeUp.setTime(goToBed.getTime() + 9 * 60 * 60 * 1000); //Sleep for exactly nine hours
-		this.logOvernightData(new OvernightSleepData(goToBed, wakeUp));
-	}
-
 	private async load() {
-		var sleepData = await this.sleepStorage?.get("sleep");
-		var sleepinessData = await this.sleepStorage?.get("sleepiness");
+		var sleepData = await this._storage?.get("sleep");
+		var sleepinessData = await this._storage?.get("sleepiness");
 
 		if (sleepData) {
 			//construct sleep array
@@ -69,8 +51,8 @@ export class SleepService {
 	}
 
 	private async save() {
-		await this.sleepStorage?.set("sleep", SleepService.AllOvernightData);
-		await this.sleepStorage?.set("sleepiness", SleepService.AllSleepinessData);
+		await this._storage?.set("sleep", SleepService.AllOvernightData);
+		await this._storage?.set("sleepiness", SleepService.AllSleepinessData);
 	}
 
 	public logOvernightData(sleepData:OvernightSleepData) {
@@ -86,6 +68,6 @@ export class SleepService {
 	}
 
 	public async clearAll() {
-		await this.sleepStorage?.clear();
+		await this._storage?.clear();
 	}
 }

@@ -17,7 +17,7 @@ export class HomePage {
 	sleepiness:number = 1;
 	sleepinessTime:string = "";
 	greeting:string = "Hello!";
-	possibleGreetings = ["Good morning!", "Good afternoon", "Good night"];
+	possibleGreetings = ["Good morning!", "Good afternoon.", "Good night!"];
 
   	constructor(public sleepService:SleepService) {
 		const currentTime = new Date();
@@ -29,7 +29,18 @@ export class HomePage {
 	}
 
 	public calculate() {
-		//calculate duration
+		var sleepStartDate = new Date(this.sleepStart);
+		var sleepEndDate = new Date(this.sleepEnd);
+		var timeDifference = sleepEndDate.getTime() - sleepStartDate.getTime();
+		if (timeDifference <= 0) {
+			return "0 hours, 0 minutes";
+		} else {
+			var hours = Math.floor(timeDifference / (1000*60*60))
+			var minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+			var result:string = hours + " hours, " + minutes + " minutes";
+			return result;
+		}
+
 	}
 
 	public newSleepLog() {
