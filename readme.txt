@@ -23,6 +23,7 @@ https://spin.atomicobject.com/question-mark-react-js/
 https://stackoverflow.com/questions/14980014/how-can-i-calculate-the-time-between-2-dates-in-typescript
 https://stackoverflow.com/questions/19700283/how-can-i-convert-time-in-milliseconds-to-hours-min-sec-format-in-javascript
 https://stackoverflow.com/questions/67558793/nullinjectorerror-no-provider-for-storage-ionic-6
+https://github.com/ionic-team/ionic-storage/issues/308
 
 
 4. What classmates or other individuals did you consult as part of this assignment? What did you discuss?
