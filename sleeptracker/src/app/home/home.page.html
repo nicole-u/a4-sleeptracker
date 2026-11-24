@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header color="secondary" [translucent]="true">
   <ion-toolbar color="secondary">
     <ion-title color="dark">
       INF Sleep Tracker ver. 1.3.3
@@ -7,12 +7,102 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
+  <ion-header color="secondary" collapse="condense">
+    <ion-toolbar color="secondary">
       <ion-title size="large"><strong>INF Sleep Tracker</strong></ion-title>
     </ion-toolbar>
   </ion-header>
+  
+  <ion-label id="greeting">
+    <br>{{greeting}}, user!
+    <br>
+    {{message}}
+  </ion-label>
+  <br><br>
+  
+  <ion-button id="open-overnight-modal" shape="round" expand="block">Log Overnight Sleep</ion-button>
+
+  <ion-modal trigger="open-overnight-modal" (willDismiss)="onWillDismiss($event)">
+      <ng-template>
+        <ion-header color="secondary">
+          <ion-toolbar color="secondary">
+            <ion-buttons slot="start">
+              <ion-button (click)="cancel()">Cancel</ion-button>
+            </ion-buttons>
+          <ion-title>New Overnight Log</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()">Submit</ion-button>
+          </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+          <br><br>
+          <ion-label>Bedtime</ion-label>
+          <br>
+          <ion-datetime-button datetime="sleepyTime" color="tertiary"></ion-datetime-button>
+          <br><br>
+          <ion-label>Wakeup Time</ion-label>
+          <ion-datetime-button datetime="wakeTime" color="tertiary"></ion-datetime-button>
+          <br>
+          <ion-label>Total sleep: {{ calculate() }} </ion-label>
+          <br><br>
+          <ion-button (click)="confirm()">Submit</ion-button>
+
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime 
+                id="sleepyTime"
+                [(ngModel)]="sleepStart">
+                <span slot="title">Select Bedtime</span>
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime 
+                id="wakeTime"
+                [(ngModel)]="sleepEnd">
+                <span slot="title">Select Wake-Up Time</span>
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+
+        </ion-content>
+      </ng-template>
+  </ion-modal>
+  <br><hr color="#cdedf6" width="75%"><br>
+
+  <ion-label id="title">Log Sleepiness</ion-label><br>
+    <br><br>
+    <div>
+      <ion-label>Sleepiness Level: {{sleepiness}}</ion-label>
+      <br>{{sleepinessDesc}}
+      <br>
+      <ion-range min="1" max="7" snaps="true" ticks="true" step="1" [(ngModel)]="sleepiness" color="primary">
+        <ion-label slot="start">Alert</ion-label>
+        <ion-label slot="end">Sleepy</ion-label>
+      </ion-range>
+      <br><br>
+      <ion-label>Sleepiness Time</ion-label>
+      <br><br>
+      <ion-datetime-button datetime="sleepinessTime" color="tertiary"></ion-datetime-button>
+      <ion-button shape="round" size="large" (click)="newSleepinessLog()">Submit</ion-button>
+      <br><hr color="#cdedf6" width="75%"><br>
+
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime 
+            id="sleepinessTime"
+            [(ngModel)]="sleepinessTime">
+            <span slot="title">Time of Sleepiness</span>
+          </ion-datetime>
+        </ng-template>
+      </ion-modal>
+    </div>
+
+  <ion-button shape="round">View Sleep Logs</ion-button>
 
   
-  <ion-label><br>Does this shit actually work</ion-label>
 </ion-content>

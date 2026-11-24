@@ -5,6 +5,7 @@ import { Storage } from "@ionic/storage-angular";
 import { SleepService } from "./app/services/sleep.service";
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
+import { CommonModule } from '@angular/common';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -12,6 +13,7 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     SleepService,
-    Storage
+    Storage,
+    CommonModule
   ],
 });

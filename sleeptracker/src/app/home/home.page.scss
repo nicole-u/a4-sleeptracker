@@ -14,8 +14,34 @@ ion-title {
   color: #201D1E;
 }
 
-ion-label {
+ion-button {
+  display:flex;
+  width:100%;
+  padding:2%;
+  justify-content: center;
+  align-content:center;
+  height:15%;
+  font-size:1.075em;
+}
+
+#title {
+  font-weight:600;
+  text-align:center;
+  display:flex;
+  width:100%;
+  justify-content:center;
+  font-size:1.02em;
+}
+
+
+#greeting {
   padding: 2%;
+  text-align: center;
+  font-size: 1.25em;
+  display:flex;
+  justify-content:center;
+  align-content:center;
+  align-items:center;
 }
 
 #container strong {
