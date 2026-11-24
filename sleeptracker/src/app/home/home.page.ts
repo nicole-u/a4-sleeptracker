@@ -1,17 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonButtons, IonDatetime, IonLabel, IonList, IonItem, IonDatetimeButton, IonRange } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonButtons, IonDatetime, IonLabel, IonList, IonItem, IonDatetimeButton, IonRange, IonRouterLink, IonRouterLinkWithHref } from '@ionic/angular/standalone';
 import { SleepService } from '../services/sleep.service';
 import { SleepData } from '../data/sleep-data';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 import {OverlayEventDetail} from "@ionic/core/components";
 import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonDatetime, IonLabel, IonButtons, IonList, IonItem, IonDatetimeButton, FormsModule, IonRange],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonDatetime, IonLabel, IonButtons, IonList, IonItem, IonDatetimeButton, FormsModule, IonRange, IonRouterLink, IonRouterLinkWithHref, NgFor],
 })
 export class HomePage {
 	sleepStart:string = "";
@@ -23,6 +24,8 @@ export class HomePage {
 	message = "What would you like to do today?";
 	currentTime:Date;
 	@ViewChild(IonModal) modal!: IonModal;
+	sleepingData:String = "";
+	sleepinessData:String = "";
 
   	constructor(public sleepService:SleepService) {
 		this.currentTime = new Date();
@@ -41,11 +44,13 @@ export class HomePage {
 	}
 
 	ngOnInit() {
-		console.log("Sleep Data", this.allSleepData);
+		console.log("Sleep Data", SleepService.AllSleepData);
 		console.log("Sleep Start", this.sleepStart);
 		console.log("Sleep End", this.sleepEnd);
 		console.log("Sleepiness", this.sleepiness);
 		console.log("Sleepiness Time", this.sleepinessTime);
+		console.log("Overnight Data", this.allOvernightData);
+		console.log("Sleepiness Data", this.allSleepinessData);
 	}
 
 	public calculate() {
@@ -77,7 +82,7 @@ export class HomePage {
 	onWillDismiss(event: CustomEvent<OverlayEventDetail>) {
 		if (event.detail.role == "confirm") {
 			//console.log("success");
-			console.log(event.detail.data);
+			//console.log(event.detail.data);
 			this.sleepStart = event.detail.data[0];
 			this.sleepEnd = event.detail.data[1];
 			this.newSleepLog();
@@ -104,7 +109,8 @@ export class HomePage {
 		var newSleep:OvernightSleepData = new OvernightSleepData(sleepStartDate, sleepEndDate);
 		this.sleepService.logOvernightData(newSleep);
 		//console.log(newSleep);
-		//console.log(this.allSleepData);
+		this.sleepingData + (`ID: ${newSleep.id}, Date: ${newSleep.dateString}, Summary: ${newSleep.summaryString}\n`);
+		console.log("overnight", this.allOvernightData);
 		this.resetTime();
 	}
 
@@ -113,6 +119,8 @@ export class HomePage {
 		var sleepinessStart:Date = new Date(this.sleepinessTime);
 		var newSleepiness:StanfordSleepinessData = new StanfordSleepinessData(this.sleepiness, sleepinessStart);
 		this.sleepService.logSleepinessData(newSleepiness);
+		this.sleepinessData+ (`ID: ${newSleepiness.id}, Value: ${newSleepiness.sleepyValue}, Date: ${newSleepiness.dateString}, Summary: ${newSleepiness.summaryString}\n`)
+		console.log("sleepy", this.allSleepinessData)
 		this.resetTime();
 	}
 
@@ -129,5 +137,13 @@ export class HomePage {
 	/* Ionic doesn't allow bindings to static variables, so this getter can be used instead. */
 	get allSleepData() {
 		return SleepService.AllSleepData;
+	}
+
+	get allOvernightData() {
+		return SleepService.AllOvernightData;
+	}
+
+	get allSleepinessData() {
+		return SleepService.AllSleepinessData;
 	}
 }

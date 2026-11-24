@@ -31,18 +31,14 @@ export class SleepService {
 
 		if (sleepData) {
 			//construct sleep array
-			sleepData.forEach((x: OvernightSleepData) => {
-				var newData = new OvernightSleepData(new Date(x.startOfSleep), new Date(x.endOfSleep));
-				SleepService.AllOvernightData.push(newData);
-			});
+			SleepService.AllOvernightData = sleepData.map((x: any) => new OvernightSleepData(new Date(x.sleepStart), new Date(x.sleepEnd)));
+			console.log("sleep data loaded");
 		}
 
 		if (sleepinessData) {
 			//construct sleepiness array
-			sleepinessData.forEach((x: StanfordSleepinessData) => {
-				var newData = new StanfordSleepinessData(x.sleepyValue, new Date(x.time));
-				SleepService.AllSleepinessData.push(newData);
-			});
+			SleepService.AllSleepinessData = sleepinessData.map((x:any) => new StanfordSleepinessData(x.sleepyValue, new Date(x.time)));
+			console.log("sleepiness data loaded");
 		}
 
 		//attach all the arrays
@@ -53,6 +49,7 @@ export class SleepService {
 	private async save() {
 		await this._storage?.set("sleep", SleepService.AllOvernightData);
 		await this._storage?.set("sleepiness", SleepService.AllSleepinessData);
+		console.log("data saved");
 	}
 
 	public logOvernightData(sleepData:OvernightSleepData) {
@@ -67,7 +64,15 @@ export class SleepService {
 		this.save();
 	}
 
-	public async clearAll() {
-		await this._storage?.clear();
+	get AllSleepData():SleepData[] {
+		return this.AllSleepData;
+	}
+
+	get AllSleepinessData():StanfordSleepinessData[] {
+		return this.AllSleepinessData;
+	}
+
+	get AllOvernightData():OvernightSleepData[] {
+		return this.AllOvernightData;
 	}
 }
